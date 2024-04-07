@@ -1,0 +1,39 @@
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+run {
+    //gradle run 実行時にstdinをgradleに接続する
+    standardInput = System.in
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.json:json:20231013"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'searchaddress.App'
+}
+
+jar {
+    archiveBaseName = 'searchaddress'
+    archiveVersion =  '0.1.0'
+    manifest{
+        attributes 'Main-Class' : 'searchaddress.App'
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
