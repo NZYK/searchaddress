@@ -145,9 +145,9 @@ class App {
 
     // 入力されたJSONデータを指定のパスにファイルとして出力するメソッド
     private static void exportJSON(String filePath, JSONObject json) {
-        try (FileWriter fwr = new FileWriter(filePath)) {
-            fwr.write(json.toString());
-            fwr.flush();
+        try (FileOutputStream fos = new FileOutputStream(filePath);
+            OutputStreamWriter writer = new OutputStreamWriter(fos,"UTF-8")) {
+            writer.write(json.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,7 +157,7 @@ class App {
     private static JSONObject loadJSON(String filePath) {
         JSONObject json = new JSONObject();
         try (FileInputStream fis = new FileInputStream(filePath);
-                Scanner scanner = new Scanner(fis)) {
+                Scanner scanner = new Scanner(fis,"UTF-8")) {
             if (scanner.hasNext()) {
                 json = new JSONObject(scanner.nextLine());
             }
@@ -166,7 +166,7 @@ class App {
         }
         return json;
     }
-
+    
     // 受け取った検索ワードリストで転置インデックスへの検索を行い、ヒットしたレコードのIDをリストで返すメソッド
     private static List<Integer> search(List<String> searchWordArr, JSONObject invIndex) {
         List<Integer> searchResult = new ArrayList<>();
